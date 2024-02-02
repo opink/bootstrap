@@ -42,7 +42,12 @@ function permFun(x, nA, nB, rounds, doubleSiteTest = true)
     ret = zeros(rounds)
     @inbounds for reti = 1:rounds
         fisher_yates_shuffle!(x, k)
-        diff = mean(x[begin:k]) - mean(x[k+1:end])
+
+        @views x1 = x[begin:k]
+        @views x2 = x[k+1:end]
+        diff = mean(x1) - mean(x2)
+        # diff = mean(x[begin:k]) - mean(x[k+1:end])
+        
         ret[reti] = doubleSiteTest ? abs(diff) : diff
     end
     return ret
